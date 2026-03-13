@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rocketmind — AI-агенты для вашего бизнеса</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500&family=Shantell+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ================================================
+       DESIGN SYSTEM TOKENS — Rocketmind DS v1.0
+    ================================================ */
+    :root {
+      /* === Цвета === */
+      --background: #FAFAFA;
+      --foreground: #2D2D2D;
+      --muted: #F0F0F0;
+      --muted-foreground: #666666;
+      --border: #CBCBCB;
+      --input: #CBCBCB;
+      --ring: #A172F8;
+      --card: #FFFFFF;
+      --card-foreground: #2D2D2D;
+      --primary: #FFCC00;
+      --primary-foreground: #121212;
+      --secondary: #F0F0F0;
+      --secondary-foreground: #2D2D2D;
+      --accent: #F0F0F0;
+      --accent-foreground: #2D2D2D;
+      --destructive: #ED4843;
+
+      --color-yellow-100: #FFCC00;
+      --color-yellow-50: #FFF0AA;
+      --color-yellow-10: #FFFEF3;
+      --color-violet-100: #A172F8;
+      --color-violet-50: #DCC8FF;
+      --color-violet-10: #FBFAFE;
+      --color-terracotta: #FE733A;
+      --color-sky: #56CAEA;
+      --color-pink: #FF54AC;
+      --color-blue: #4A56DF;
+      --color-green: #9AF576;
+
+      /* === Типографика === */
+      --font-heading: 'Roboto Condensed', sans-serif;
+      --font-mono: 'Roboto Mono', monospace;
+      --font-body: 'Roboto', sans-serif;
+      --font-accent: 'Shantell Sans', cursive;
+
+      --text-2xs: 0.625rem;   /* 10px */
+      --text-xs:  0.8125rem;  /* 13px */
+      --text-sm:  1rem;       /* 16px */
+      --text-md:  1.25rem;    /* 20px */
+      --text-lg:  1.625rem;   /* 26px */
+      --text-xl:  2.625rem;   /* 42px */
+      --text-2xl: 4.25rem;    /* 68px */
+
+      --leading-none:    1;
+      --leading-tight:   1.1;
+      --leading-snug:    1.2;
+      --leading-normal:  1.3;
+      --leading-relaxed: 1.5;
+      --leading-body:    1.618;
+
+      --tracking-tight:   -0.02em;
+      --tracking-normal:  0;
+      --tracking-wide:    0.05em;
+      --tracking-wider:   0.08em;
+      --tracking-widest:  0.12em;
+
+      /* === Spacing (модуль 8px) === */
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+
+      /* === Border Radius (flat, small-first) === */
+      --radius-none: 0;
+      --radius-sm:   0.25rem;    /* 4px */
+      --radius:      0.375rem;   /* 6px — базовый */
+      --radius-lg:   0.5rem;     /* 8px */
+      --radius-xl:   0.75rem;    /* 12px */
+      --radius-full: 624.9375rem;
+
+      /* === Shadows — FLAT (все none) === */
+      --shadow-sm:  none;
+      --shadow:     none;
+      --shadow-md:  none;
+      --shadow-lg:  none;
+
+      /* === Glow === */
+      --glow-yellow: 0 0 0 1px hsl(54 100% 50% / 0.3),
+                     0 0 12px 0 hsl(54 100% 50% / 0.25),
+                     0 0 24px 0 hsl(54 100% 50% / 0.1);
+      --glow-violet: 0 0 0 1px hsl(265 91% 71% / 0.3),
+                     0 0 12px 0 hsl(265 91% 71% / 0.2),
+                     0 0 24px 0 hsl(265 91% 71% / 0.08);
+      --glow-subtle: 0 0 0 1px hsl(0 0% 100% / 0.08),
+                     0 0 8px 0 hsl(0 0% 100% / 0.04);
+
+      /* === Animation timing === */
+      --duration-fast:   100ms;
+      --duration-base:   200ms;
+      --duration-smooth: 300ms;
+      --duration-grid:   800ms;
+      --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-enter:    cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    /* ================================================
+       RESET & BASE
+    ================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--foreground);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ================================================
+       LAYOUT
+    ================================================ */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-20);
+    }
+    @media (max-width: 1024px) { .container { padding: 0 var(--space-10); } }
+    @media (max-width: 768px)  { .container { padding: 0 var(--space-5); } }
+
+    /* ================================================
+       COMPONENTS — BUTTON
+       DS §6.1: Roboto Mono, uppercase, tracking 0.08em
+               flat, radius 6px, glow on hover/focus
+    ================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      font-size: var(--text-xs);   /* 13px */
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      border-radius: var(--radius); /* 6px */
+      transition: all var(--duration-fast) var(--ease-standard);
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    /* Sizes */
+    .btn-sm  { height: 32px; padding: 0 var(--space-3); }
+    .btn-md  { height: 40px; padding: 0 var(--space-4); }
+    .btn-lg  { height: 48px; padding: 0 var(--space-6); font-size: var(--text-xs); }
+
+    /* Variants */
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .btn-primary:hover {
+      background: #FFE040;
+      box-shadow: var(--glow-yellow);
+    }
+    .btn-primary:active { background: #E6B800; }
+    .btn-primary:focus-visible { outline: none; box-shadow: var(--glow-yellow); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-violet-100);
+      border: 1px solid var(--color-violet-100);
+    }
+    .btn-secondary:hover {
+      background: hsl(265 91% 71% / 0.08);
+      box-shadow: var(--glow-violet);
+    }
+    .btn-secondary:focus-visible { outline: none; box-shadow: var(--glow-violet); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted-foreground);
+    }
+    .btn-ghost:hover { background: var(--accent); color: var(--foreground); }
+    .btn-ghost:focus-visible { outline: none; box-shadow: var(--glow-subtle); }
+
+    /* ================================================
+       COMPONENTS — BADGE
+       DS §1.4: bg-10, border-50, text from 100
+    ================================================ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 3px 10px;
+      border-radius: var(--radius-sm); /* 4px */
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);   /* 10px */
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+    .badge-yellow  { background: var(--color-yellow-10);  color: #7A5F00; border: 1px solid var(--color-yellow-50); }
+    .badge-violet  { background: var(--color-violet-10);  color: var(--color-violet-100); border: 1px solid var(--color-violet-50); }
+    .badge-sky     { background: #F7FDFF; color: #1A7D92;  border: 1px solid #C3ECF7; }
+    .badge-orange  { background: #FFFAF7; color: #B84010;  border: 1px solid #FFD6AD; }
+    .badge-pink    { background: #FFF8FC; color: #CC0070;  border: 1px solid #FFCB90; }
+    .badge-green   { background: #F7FEF3; color: #3A8020;  border: 1px solid #D8F4CD; }
+    .badge-blue    { background: #F9FAFF; color: #2D38A0;  border: 1px solid #BFC4F3; }
+
+    /* ================================================
+       CORNER BRACKETS — DS §5.1
+       ВАЖНО: псевдоэлементы рисуют прямые L-линии.
+       На элементах с border-radius они ОБЯЗАТЕЛЬНО
+       смещаются внутрь на значение radius, иначе
+       прямой угол скобки выступает из скругления.
+       Базовый .bracket рассчитан на radius: 0.
+       Для скруглённых контейнеров — модификатор
+       .bracket--inset-{size} с нужным отступом.
+    ================================================ */
+    .bracket { position: relative; }
+    .bracket::before,
+    .bracket::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: var(--border);
+      border-style: solid;
+      pointer-events: none;
+    }
+    .bracket::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+    .bracket::after  { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+    /* Для элементов с border-radius: смещаем скобки внутрь */
+    .bracket--inset-sm::before  { top:    var(--radius-sm); left:   var(--radius-sm); }
+    .bracket--inset-sm::after   { bottom: var(--radius-sm); right:  var(--radius-sm); }
+    .bracket--inset-md::before  { top:    var(--radius);    left:   var(--radius); }
+    .bracket--inset-md::after   { bottom: var(--radius);    right:  var(--radius); }
+    .bracket--inset-lg::before  { top:    var(--radius-lg); left:   var(--radius-lg); }
+    .bracket--inset-lg::after   { bottom: var(--radius-lg); right:  var(--radius-lg); }
+    .bracket--inset-xl::before  { top:    var(--radius-xl); left:   var(--radius-xl); }
+    .bracket--inset-xl::after   { bottom: var(--radius-xl); right:  var(--radius-xl); }
+
+    /* ================================================
+       TEXT-LINK CTA — DS §5.7
+    ================================================ */
+    .link-cta {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--muted-foreground);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color var(--duration-fast) var(--ease-standard),
+                  gap var(--duration-fast) var(--ease-standard);
+    }
+    .link-cta:hover { color: var(--foreground); gap: 10px; }
+
+    /* ================================================
+       ANIMATED GRID LINES — DS §5.2
+    ================================================ */
+    .grid-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .grid-line {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.05);
+      animation: line-appear var(--duration-grid) var(--ease-enter) forwards;
+      opacity: 0;
+    }
+    .grid-line--h {
+      width: 100%; height: 1px;
+      transform-origin: left center;
+      transform: scaleX(0);
+    }
+    .grid-line--v {
+      width: 1px; height: 100%;
+      transform-origin: top center;
+      transform: scaleY(0);
+    }
+    @keyframes line-appear {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ================================================
+       NAV
+    ================================================ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 250, 250, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      gap: var(--space-4);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-heading);
+      font-size: var(--text-md);   /* 20px */
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-tight);
+      color: var(--foreground);
+    }
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Lucide rocket SVG inline */
+    .logo-mark svg { width: 16px; height: 16px; color: var(--primary-foreground); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+    .nav-cta { display: flex; gap: var(--space-2); }
+
+    /* ================================================
+       HERO SECTION — DS §5.2 grid lines, §5.1 brackets
+                       §3.3 golden ratio layout (38/62)
+    ================================================ */
+    .hero {
+      position: relative;
+      padding: var(--space-24) 0 var(--space-20);
+      overflow: hidden;
+    }
+    .hero-inner {
+      display: grid;
+      /* 38% / 62% golden ratio split */
+      grid-template-columns: 38fr 62fr;
+      gap: var(--space-16);
+      align-items: center;
+    }
+
+    /* Eyebrow: Roboto Mono uppercase — nav/button font per DS */
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 5px 12px;
+      background: var(--color-violet-10);
+      border: 1px solid var(--color-violet-50);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);   /* 10px */
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--color-violet-100);
+      margin-bottom: var(--space-5);
+    }
+    .eyebrow-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--color-violet-100);
+      animation: blink 2s var(--ease-standard) infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* H1: Roboto Condensed, 68px, uppercase, ExtraBold — DS §2.3 */
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);  /* 68px */
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: var(--leading-none);  /* 1.0 */
+      letter-spacing: var(--tracking-tight); /* -0.02em */
+      color: var(--foreground);
+      margin-bottom: var(--space-5);
+    }
+    .hero-title .accent-line {
+      position: relative;
+      display: inline;
+    }
+    /* Yellow underline bar — decoration only, no shadow */
+    .hero-title .accent-line::after {
+      content: '';
+      position: absolute;
+      bottom: 2px; left: 0;
+      width: 100%; height: 8px;
+      background: var(--primary);
+      opacity: 0.4;
+      z-index: -1;
+    }
+
+    /* Lead: Roboto 20px — DS §2.3 */
+    .hero-lead {
+      font-family: var(--font-body);
+      font-size: var(--text-md);   /* 20px */
+      font-weight: 400;
+      line-height: var(--leading-relaxed); /* 1.5 */
+      color: var(--muted-foreground);
+      margin-bottom: var(--space-8);
+      max-width: 420px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-10);
+    }
+
+    /* Social proof — Roboto body */
+    .hero-proof {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-body);
+      font-size: var(--text-xs);   /* 13px */
+      color: var(--muted-foreground);
+    }
+    .proof-avatars { display: flex; }
+    .proof-avatar {
+      width: 24px; height: 24px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--background);
+      margin-left: -6px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .proof-avatar:first-child { margin-left: 0; }
+    .av1 { background: var(--primary); color: var(--primary-foreground); }
+    .av2 { background: var(--color-violet-100); color: #fff; }
+    .av3 { background: var(--color-sky); color: #1A7D92; }
+    .av4 { background: var(--color-terracotta); color: #fff; }
+
+    /* Hero visual — chat preview */
+    .hero-visual { position: relative; }
+
+    /* Chat card: thin border, no shadow — DS §5.6 */
+    .chat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl); /* 12px max */
+      padding: var(--space-5);
+      /* NO box-shadow per DS flat rule */
+    }
+    .chat-card.bracket { }   /* corner brackets from DS §5.1 */
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--muted);
+    }
+    .agent-ava {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--color-violet-10);
+    }
+    /* Lucide user SVG */
+    .agent-ava svg { width: 20px; height: 20px; color: var(--color-violet-100); }
+
+    /* Agent name: Roboto Condensed H4 — DS §2.3 */
+    .agent-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-md);   /* 20px */
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.005em;
+      color: var(--foreground);
+    }
+    .agent-status {
+      font-family: var(--font-body);
+      font-size: var(--text-2xs); /* 10px */
+      color: var(--muted-foreground);
+      display: flex; align-items: center; gap: 4px;
+      margin-top: 2px;
+    }
+    /* Filled circle — DS §7.6 допускает filled для online/offline */
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--color-green);
+    }
+
+    .chat-msgs { display: flex; flex-direction: column; gap: var(--space-3); }
+    .chat-msg {
+      max-width: 88%;
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);  /* 13px */
+      line-height: var(--leading-relaxed);
+    }
+    .msg-agent {
+      background: var(--muted);
+      border-radius: var(--radius-sm) var(--radius-lg) var(--radius-lg) var(--radius-lg);
+      color: var(--foreground);
+      align-self: flex-start;
+    }
+    .msg-user {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-radius: var(--radius-lg) var(--radius-sm) var(--radius-lg) var(--radius-lg);
+      align-self: flex-end;
+    }
+
+    /* Chat input row */
+    .chat-input-row {
+      margin-top: var(--space-4);
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+      background: var(--muted);
+      border-radius: var(--radius-lg);
+      padding: 8px 8px 8px 14px;
+      border: 1px solid var(--border);
+    }
+    .chat-input-text {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--muted-foreground);
+    }
+    /* Send button: icon-size, no text */
+    .send-btn {
+      width: 32px; height: 32px;
+      border-radius: var(--radius);
+      background: var(--primary);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: box-shadow var(--duration-fast) var(--ease-standard);
+    }
+    .send-btn:hover { box-shadow: var(--glow-yellow); }
+    .send-btn svg { width: 14px; height: 14px; color: var(--primary-foreground); }
+
+    /* Floating stat cards (no shadow, thin border) */
+    .float-card {
+      position: absolute;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2) var(--space-3);
+      display: flex; align-items: center; gap: var(--space-2);
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--foreground);
+      pointer-events: none;
+    }
+    .float-1 { top: -14px; right: -12px; }
+    .float-2 { bottom: -14px; left: -12px; }
+    .float-card svg { width: 14px; height: 14px; }
+    .fc-yellow { color: var(--color-yellow-100); }
+    .fc-green  { color: var(--color-green); }
+
+    /* ================================================
+       SECTION HEADER
+    ================================================ */
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--space-12);
+    }
+    /* Eyebrow: Roboto Mono, 10px, uppercase */
+    .s-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+      font-weight: 600;
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+      color: var(--color-violet-100);
+      margin-bottom: var(--space-3);
+    }
+    /* H2: Roboto Condensed, 42px, uppercase */
+    .s-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);  /* 42px */
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: var(--leading-tight);
+      letter-spacing: -0.015em;
+      color: var(--foreground);
+      margin-bottom: var(--space-4);
+    }
+    /* Lead/intro body */
+    .s-subtitle {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);  /* 16px */
+      line-height: var(--leading-body);
+      color: var(--muted-foreground);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ================================================
+       AGENTS SECTION
+    ================================================ */
+    .agents-section {
+      padding: var(--space-20) 0;
+      background: var(--muted);
+    }
+
+    /* Filter buttons: btn-outline style per DS */
+    .filters {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: var(--space-8);
+    }
+    .filter-btn {
+      height: 32px;
+      padding: 0 var(--space-4);
+      border-radius: var(--radius); /* 6px */
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);  /* 10px */
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted-foreground);
+      transition: all var(--duration-fast) var(--ease-standard);
+    }
+    .filter-btn:hover { border-color: var(--color-violet-100); color: var(--color-violet-100); }
+    .filter-btn.active {
+      background: var(--foreground);
+      color: var(--background);
+      border-color: var(--foreground);
+    }
+
+    /* Agents grid */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+      gap: var(--space-5);
+    }
+
+    /* Agent card — DS §6.3 agent card variant
+       radius 6px, no shadow, hover: border muted-fg + glow-violet */
+    .agent-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);  /* 6px */
+      padding: var(--space-6);
+      cursor: pointer;
+      transition: border-color var(--duration-base) var(--ease-standard),
+                  box-shadow var(--duration-base) var(--ease-standard);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .agent-card:hover {
+      border-color: var(--color-violet-100);
+      box-shadow: var(--glow-violet);
+    }
+
+    .ac-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    /* Agent icon: outline, 24px, circle — DS §6.3 anatomy */
+    .ac-icon {
+      width: 32px; height: 32px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted-foreground);
+    }
+    .ac-icon svg { width: 16px; height: 16px; }
+
+    /* H4: Roboto Condensed, 20px, uppercase */
+    .ac-name {
+      font-family: var(--font-heading);
+      font-size: var(--text-md);   /* 20px */
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.005em;
+      color: var(--foreground);
+    }
+    /* Caption: Roboto Mono, 10px */
+    .ac-role {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--muted-foreground);
+      margin-bottom: var(--space-1);
+    }
+    /* Body: Roboto 13px */
+    .ac-desc {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);   /* 13px */
+      line-height: var(--leading-body);
+      color: var(--muted-foreground);
+      flex: 1;
+    }
+    .ac-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-1);
+    }
+    /* Stats: Roboto Mono micro */
+    .ac-stats {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+      color: var(--muted-foreground);
+      letter-spacing: var(--tracking-wide);
+    }
+
+    /* ================================================
+       METHODOLOGY SECTION
+    ================================================ */
+    .methodology-section {
+      padding: var(--space-24) 0;
+    }
+    .method-inner {
+      display: grid;
+      /* 5/7 columns ≈ golden ratio — DS §3.3 */
+      grid-template-columns: 5fr 7fr;
+      gap: var(--space-16);
+      align-items: start;
+    }
+
+    .method-steps { display: flex; flex-direction: column; gap: var(--space-4); }
+
+    .step {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      border-radius: var(--radius-lg);
+      border: 1px solid transparent;
+      transition: background var(--duration-base) var(--ease-standard),
+                  border-color var(--duration-base) var(--ease-standard);
+    }
+    .step:hover { background: var(--muted); border-color: var(--border); }
+
+    /* Step number: Roboto Mono */
+    .step-num {
+      width: 32px; height: 32px;
+      border-radius: var(--radius);
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: var(--tracking-wider);
+    }
+    .step-body { flex: 1; }
+
+    /* H4: Roboto Condensed, 20px */
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-md);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.005em;
+      margin-bottom: var(--space-1);
+    }
+    /* Body: Roboto 13px */
+    .step-text {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      line-height: var(--leading-body);
+      color: var(--muted-foreground);
+    }
+
+    /* Stats panel — DS §6.3 stat card, thin border, no shadow */
+    .method-stats {
+      position: sticky;
+      top: 72px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);  /* 12px */
+      padding: var(--space-6);
+    }
+    .stat-card.stat-primary {
+      background: var(--primary);
+      border-color: transparent;
+    }
+
+    /* Stat value: Roboto Condensed display size */
+    .stat-val {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);  /* 42px */
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: var(--leading-none);
+      letter-spacing: var(--tracking-tight);
+      color: var(--foreground);
+      margin-bottom: var(--space-2);
+    }
+    .stat-primary .stat-val { color: var(--primary-foreground); }
+
+    .stat-lbl {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--muted-foreground);
+    }
+    .stat-primary .stat-lbl { color: rgba(18,18,18,0.6); }
+
+    .stats-2col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+
+    /* Quote block: Shantell Sans accent — DS §2.3 */
+    .quote-card {
+      background: var(--color-violet-10);
+      border: 1px solid var(--color-violet-50);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+    }
+    .quote-text {
+      font-family: var(--font-accent);  /* Shantell Sans */
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      color: var(--foreground);
+    }
+    .quote-author {
+      margin-top: var(--space-3);
+      display: flex; align-items: center; gap: var(--space-2);
+      font-family: var(--font-body);
+      font-size: var(--text-2xs);
+      color: var(--muted-foreground);
+    }
+    .quote-ava {
+      width: 20px; height: 20px;
+      border-radius: var(--radius-full);
+      background: var(--color-violet-50);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--color-violet-100);
+    }
+
+    /* Yellow CTA card */
+    .cta-card {
+      background: var(--color-yellow-10);
+      border: 1px solid var(--color-yellow-50);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+    }
+    .cta-card-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: #7A5F00;
+      margin-bottom: var(--space-2);
+    }
+    .cta-card-text {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: #7A5F00;
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-4);
+    }
+
+    /* ================================================
+       FOOTER CTA SECTION — dark bg
+    ================================================ */
+    .cta-section {
+      padding: var(--space-20) 0;
+      background: var(--foreground);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Ambient glow — DS §5.3, only dark sections */
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, hsl(265 91% 71% / 0.12) 0%, transparent 70%);
+      top: -200px; left: -100px;
+      pointer-events: none;
+      filter: blur(40px);
+    }
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, hsl(54 100% 50% / 0.08) 0%, transparent 70%);
+      bottom: -150px; right: -50px;
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .cta-inner { position: relative; z-index: 1; }
+
+    .cta-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);   /* 42px */
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: var(--leading-tight);
+      letter-spacing: -0.015em;
+      color: var(--background);
+      margin-bottom: var(--space-4);
+    }
+    .cta-subtitle {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: rgba(240,240,240,0.6);
+      margin-bottom: var(--space-8);
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+
+    /* Ghost on dark */
+    .btn-ghost-dark {
+      height: 48px; padding: 0 var(--space-6);
+      border-radius: var(--radius);
+      background: transparent;
+      color: rgba(240,240,240,0.7);
+      border: 1px solid rgba(240,240,240,0.15);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      cursor: pointer;
+      transition: border-color var(--duration-fast) var(--ease-standard),
+                  color var(--duration-fast) var(--ease-standard);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-ghost-dark:hover { color: #F0F0F0; border-color: rgba(240,240,240,0.35); }
+
+    /* ================================================
+       FOOTER
+    ================================================ */
+    .footer {
+      padding: var(--space-6) 0;
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--muted-foreground);
+    }
+
+    /* ================================================
+       RESPONSIVE
+    ================================================ */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .method-inner { grid-template-columns: 1fr; }
+      .method-stats { position: static; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero-title { font-size: var(--text-xl); }  /* 42px on mobile */
+      .s-title { font-size: var(--text-lg); }     /* 26px on mobile */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" class="logo">
+          <div class="logo-mark">
+            <!-- Lucide: Rocket -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+            </svg>
+          </div>
+          Rocketmind
+        </a>
+
+        <div class="nav-links">
+          <a href="#agents" class="btn btn-ghost btn-sm">Агенты</a>
+          <a href="#methodology" class="btn btn-ghost btn-sm">Методология</a>
+          <a href="#" class="btn btn-ghost btn-sm">Цены</a>
+        </div>
+
+        <div class="nav-cta">
+          <a href="#" class="btn btn-secondary btn-sm">Войти</a>
+          <a href="#" class="btn btn-primary btn-sm">Попробовать</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <!-- Animated grid lines — DS §5.2 -->
+    <div class="grid-lines" aria-hidden="true">
+      <div class="grid-line grid-line--h" style="top: 25%;  animation-delay: 0s;"></div>
+      <div class="grid-line grid-line--h" style="top: 50%;  animation-delay: 0.05s;"></div>
+      <div class="grid-line grid-line--h" style="top: 75%;  animation-delay: 0.1s;"></div>
+      <div class="grid-line grid-line--v" style="left: 33%; animation-delay: 0.15s;"></div>
+      <div class="grid-line grid-line--v" style="left: 66%; animation-delay: 0.2s;"></div>
+    </div>
+
+    <div class="container">
+      <div class="hero-inner">
+
+        <!-- Left: text -->
+        <div>
+          <div class="hero-eyebrow">
+            <span class="eyebrow-dot"></span>
+            MVP 1.1 — уже в работе
+          </div>
+
+          <h1 class="hero-title">
+            AI-агенты,<br>
+            ведущие<br>
+            <span class="accent-line">ваши кейсы</span>
+          </h1>
+
+          <p class="hero-lead">
+            Платформа специализированных AI-агентов для ведения сложных бизнес-кейсов. Диалог → анализ → результат прямо в чате.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#" class="btn btn-primary btn-lg">Попробовать →</a>
+            <a href="#agents" class="btn btn-secondary btn-md">Смотреть агентов</a>
+          </div>
+
+          <div class="hero-proof">
+            <div class="proof-avatars">
+              <div class="proof-avatar av1">К</div>
+              <div class="proof-avatar av2">Н</div>
+              <div class="proof-avatar av3">А</div>
+              <div class="proof-avatar av4">С</div>
+            </div>
+            <span>Уже 200+ предпринимателей ведут кейсы</span>
+          </div>
+        </div>
+
+        <!-- Right: chat preview with corner brackets -->
+        <div class="hero-visual">
+          <div class="chat-card bracket bracket--inset-xl">
+            <!-- Floating stat cards — no shadow, thin border -->
+            <div class="float-card float-1">
+              <svg class="fc-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+              Ответ за 3 сек
+            </div>
+            <div class="float-card float-2">
+              <svg class="fc-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Данные защищены
+            </div>
+
+            <div class="chat-header">
+              <div class="agent-ava">
+                <!-- Lucide: Brain -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
+                  <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
+                  <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/>
+                  <path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/>
+                  <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/>
+                  <path d="M3.477 10.896a4 4 0 0 1 .585-.396"/>
+                  <path d="M19.938 10.5a4 4 0 0 1 .585.396"/>
+                  <path d="M6 18a4 4 0 0 1-1.967-.516"/>
+                  <path d="M19.967 17.484A4 4 0 0 1 18 18"/>
+                </svg>
+              </div>
+              <div>
+                <div class="agent-name">Катя</div>
+                <div class="agent-status">
+                  <span class="status-dot"></span>
+                  Аналитик экосистем
+                </div>
+              </div>
+              <div style="margin-left:auto;">
+                <span class="badge badge-yellow">Кейс #001</span>
+              </div>
+            </div>
+
+            <div class="chat-msgs">
+              <div class="chat-msg msg-agent">Расскажи о своём проекте — что хочешь запустить?</div>
+              <div class="chat-msg msg-user">Онлайн-школа по дизайну</div>
+              <div class="chat-msg msg-agent">Анализирую рынок EdTech. Нашла 3 ключевых тренда, которые стоит учесть...</div>
+            </div>
+
+            <div class="chat-input-row">
+              <span class="chat-input-text">Продолжить диалог...</span>
+              <button class="send-btn" aria-label="Отправить">
+                <!-- Lucide: ArrowRight -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AGENTS ===== -->
+  <section class="agents-section" id="agents">
+    <div class="container">
+      <div class="section-header">
+        <div class="s-eyebrow">Каталог агентов</div>
+        <h2 class="s-title">Выберите AI-партнёра</h2>
+        <p class="s-subtitle">Каждый агент — специалист в своей области. Запустите нужного и начните диалог прямо сейчас.</p>
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter(this,'all')">Все</button>
+        <button class="filter-btn" onclick="setFilter(this,'strategy')">Стратегия</button>
+        <button class="filter-btn" onclick="setFilter(this,'design')">Дизайн</button>
+        <button class="filter-btn" onclick="setFilter(this,'research')">Исследования</button>
+        <button class="filter-btn" onclick="setFilter(this,'growth')">Рост</button>
+      </div>
+
+      <div class="agents-grid">
+
+        <!-- Катя -->
+        <div class="agent-card" data-cat="strategy research">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+            </div>
+            <span class="badge badge-violet">Стратегия</span>
+          </div>
+          <div>
+            <div class="ac-name">Катя</div>
+            <div class="ac-role">Аналитик экосистем</div>
+          </div>
+          <p class="ac-desc">Строит системную картину, выявляет связи между элементами экосистемы, находит слепые зоны в стратегии.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.9 · 128 кейсов</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+        <!-- Ник -->
+        <div class="agent-card" data-cat="strategy">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+            </div>
+            <span class="badge badge-yellow">Дизрупция</span>
+          </div>
+          <div>
+            <div class="ac-name">Ник</div>
+            <div class="ac-role">Дизраптор</div>
+          </div>
+          <p class="ac-desc">Ломает шаблоны, ищет нестандартные ходы, предлагает радикальные способы обойти конкурентов.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.8 · 94 кейса</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+        <!-- Сергей -->
+        <div class="agent-card" data-cat="research">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+              </svg>
+            </div>
+            <span class="badge badge-sky">Контекст</span>
+          </div>
+          <div>
+            <div class="ac-name">Сергей</div>
+            <div class="ac-role">Внешний контекст</div>
+          </div>
+          <p class="ac-desc">Собирает актуальные данные о рынке, трендах и конкурентах. Добавляет внешний контекст к любому решению.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.7 · 76 кейсов</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+        <!-- Лида -->
+        <div class="agent-card" data-cat="research growth">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5m4 0h10m0-11v11m0 0H5M3 7h18M3 17h18"/>
+              </svg>
+            </div>
+            <span class="badge badge-pink">Гипотезы</span>
+          </div>
+          <div>
+            <div class="ac-name">Лида</div>
+            <div class="ac-role">Тестировщик гипотез</div>
+          </div>
+          <p class="ac-desc">Превращает идеи в проверяемые гипотезы, строит план эксперимента и оценивает вероятность успеха.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.9 · 112 кейсов</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+        <!-- Алекс -->
+        <div class="agent-card" data-cat="growth">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <span class="badge badge-orange">Клиенты</span>
+          </div>
+          <div>
+            <div class="ac-name">Алекс</div>
+            <div class="ac-role">Клиентский агент</div>
+          </div>
+          <p class="ac-desc">Помогает понять клиента: строит персоны, выявляет боли и формирует предложение ценности под сегмент.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.8 · 89 кейсов</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+        <!-- Макс -->
+        <div class="agent-card" data-cat="strategy growth">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <span class="badge badge-green">Ценность</span>
+          </div>
+          <div>
+            <div class="ac-name">Макс</div>
+            <div class="ac-role">Ценность бизнеса</div>
+          </div>
+          <p class="ac-desc">Считает бизнес-модели, строит юнит-экономику и показывает, как продукт монетизируется на каждом этапе.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.9 · 135 кейсов</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+        <!-- Марк -->
+        <div class="agent-card" data-cat="design">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
+              </svg>
+            </div>
+            <span class="badge badge-blue">Дизайн</span>
+          </div>
+          <div>
+            <div class="ac-name">Марк</div>
+            <div class="ac-role">Дизайнер платформ</div>
+          </div>
+          <p class="ac-desc">Проектирует структуру продукта: CJM, флоу, архитектуру сервиса. Связывает UX с бизнес-логикой.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.7 · 61 кейс</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+        <!-- Софи -->
+        <div class="agent-card" data-cat="design research">
+          <div class="ac-top">
+            <div class="ac-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            </div>
+            <span class="badge badge-violet">Обучение</span>
+          </div>
+          <div>
+            <div class="ac-name">Софи</div>
+            <div class="ac-role">Куратор обучения</div>
+          </div>
+          <p class="ac-desc">Выстраивает образовательный путь, адаптирует контент под уровень и темп пользователя, назначает практику.</p>
+          <div class="ac-footer">
+            <span class="ac-stats">4.8 · 103 кейса</span>
+            <a href="#" class="link-cta">Запустить →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== METHODOLOGY ===== -->
+  <section class="methodology-section" id="methodology">
+    <div class="container">
+      <div class="section-header">
+        <div class="s-eyebrow">Как это работает</div>
+        <h2 class="s-title">Методология Rocketmind</h2>
+        <p class="s-subtitle">Структурированный процесс ведения кейса от формулировки до конкретного результата.</p>
+      </div>
+
+      <div class="method-inner">
+        <!-- Steps -->
+        <div class="method-steps">
+
+          <div class="step">
+            <div class="step-num">01</div>
+            <div class="step-body">
+              <div class="step-title">Формулировка кейса</div>
+              <p class="step-text">Агент задаёт уточняющие вопросы, чтобы чётко определить задачу. Никаких размытых запросов — только конкретная цель и контекст.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">02</div>
+            <div class="step-body">
+              <div class="step-title">Выбор специалиста</div>
+              <p class="step-text">Система подбирает агента под тип задачи: стратегия, исследование, дизайн или рост. Можно подключить несколько агентов последовательно.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">03</div>
+            <div class="step-body">
+              <div class="step-title">Диалог и анализ</div>
+              <p class="step-text">Агент ведёт структурированный диалог: собирает данные, проверяет гипотезы и выдаёт промежуточные выводы прямо в чате.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">04</div>
+            <div class="step-body">
+              <div class="step-title">Результат в кейсе</div>
+              <p class="step-text">Итог сессии фиксируется в кейсе: резюме, рекомендации, следующие шаги. Все данные сохраняются и доступны в любой момент.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">05</div>
+            <div class="step-body">
+              <div class="step-title">Следующий шаг</div>
+              <p class="step-text">Агент предлагает конкретное действие: протестировать гипотезу, создать MVP или оформить результат. Без воды и общих слов.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Stats panel -->
+        <div class="method-stats">
+
+          <div class="stat-card stat-primary">
+            <div class="stat-val">8</div>
+            <div class="stat-lbl">специализированных агентов в команде</div>
+          </div>
+
+          <div class="stats-2col">
+            <div class="stat-card">
+              <div class="stat-val" style="color: var(--color-violet-100); font-size: var(--text-lg);">3 СЕК</div>
+              <div class="stat-lbl">среднее время ответа</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" style="font-size: var(--text-lg);">97%</div>
+              <div class="stat-lbl">кейсов завершены успешно</div>
+            </div>
+          </div>
+
+          <!-- Quote: Shantell Sans per DS §2.3 accent label -->
+          <div class="quote-card">
+            <p class="quote-text">«Катя разобрала нашу стратегию за 20 минут и нашла узкое место, которое мы не замечали полгода.»</p>
+            <div class="quote-author">
+              <div class="quote-ava">А</div>
+              Антон К., основатель EdTech-стартапа
+            </div>
+          </div>
+
+          <div class="cta-card">
+            <div class="cta-card-label">Начните сейчас</div>
+            <div class="cta-card-text">Первые 3 кейса бесплатно. Без карты, без обязательств.</div>
+            <a href="#" class="btn btn-primary btn-md" style="width:100%;">Попробовать →</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="cta-section">
+    <div class="container cta-inner">
+      <div class="cta-title">Готовы запустить первый кейс?</div>
+      <p class="cta-subtitle">Выберите агента, опишите задачу — и получите первый результат за 5 минут.</p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-primary btn-lg">Попробовать бесплатно →</a>
+        <a href="#agents" class="btn-ghost-dark">Смотреть агентов</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="logo" style="font-size: var(--text-xs);">
+          <span class="logo-mark" style="width:20px;height:20px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+            </svg>
+          </span>
+          Rocketmind
+        </span>
+        <span>MVP 1.1 · 2026</span>
+        <span>Конфиденциальность · Условия</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function setFilter(btn, category) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.agent-card').forEach(card => {
+        const cats = card.dataset.cat || '';
+        card.style.display = (category === 'all' || cats.includes(category)) ? '' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
