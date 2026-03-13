@@ -18,6 +18,7 @@ import { GlowingEffect } from "@/components/ui/glowing-effect"
 
 const DS_VERSION = "1.2.0"
 const DS_DATE = "2026-03-12"
+const BASE_PATH = process.env.NODE_ENV === "production" ? "/rocketmind-design-system" : ""
 
 /* ───────── NAV DATA ───────── */
 const sections = [
@@ -265,7 +266,7 @@ function MascotCard({ mascot, activeState }: { mascot: typeof MASCOTS[0]; active
   const btnRef = useRef<HTMLButtonElement>(null)
 
   const currentFile = files[variantIdx] ?? files[0]
-  const imgPath = `/ai-mascots/${mascot.key}/${currentFile}`
+  const imgPath = `${BASE_PATH}/ai-mascots/${mascot.key}/${currentFile}`
   const downloadName = `rocketmind_${mascot.key}_${currentFile}`
   const hasMultiple = files.length > 1
 
@@ -748,12 +749,12 @@ export default function DesignSystemPage() {
             </button>
             <div className="flex items-center gap-2">
               <img
-                src="/text_logo_dark_background_en.svg"
+                src={`${BASE_PATH}/text_logo_dark_background_en.svg`}
                 alt="Rocketmind"
                 className="h-7 hidden dark:block"
               />
               <img
-                src="/text_logo_light_background_en.svg"
+                src={`${BASE_PATH}/text_logo_light_background_en.svg`}
                 alt="Rocketmind"
                 className="h-7 dark:hidden"
               />
@@ -897,7 +898,7 @@ export default function DesignSystemPage() {
                   {group.items.map((item) => (
                     <div key={item.file} className="rounded-sm border border-border overflow-hidden">
                       <div className="flex items-center justify-center p-8" style={{ backgroundColor: item.bg }}>
-                        <img src={`/${item.file}.svg`} alt={item.label} className={`${group.imgH} w-auto`} />
+                        <img src={`${BASE_PATH}/${item.file}.svg`} alt={item.label} className={`${group.imgH} w-auto`} />
                       </div>
                       <div className="px-4 py-3 bg-card">
                         <div className="flex items-center justify-between mb-2">
@@ -3078,8 +3079,8 @@ export default function DesignSystemPage() {
           <footer className="border-t border-border pt-6 pb-10">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-muted-foreground">
-                <img src="/icon_dark_background.svg" alt="Rocketmind" className="h-5 w-auto hidden dark:block" />
-                <img src="/icon_light_background.svg" alt="Rocketmind" className="h-5 w-auto dark:hidden" />
+                <img src={`${BASE_PATH}/icon_dark_background.svg`} alt="Rocketmind" className="h-5 w-auto hidden dark:block" />
+                <img src={`${BASE_PATH}/icon_light_background.svg`} alt="Rocketmind" className="h-5 w-auto dark:hidden" />
                 <span className="text-[length:var(--text-14)]">Rocketmind Design System v{DS_VERSION}</span>
               </div>
               <p className="text-[length:var(--text-12)] text-muted-foreground font-[family-name:var(--font-mono-family)] uppercase tracking-wider">
