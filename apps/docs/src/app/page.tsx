@@ -14,6 +14,7 @@ import {
   Wrench, GraduationCap
 } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
+import { toast } from "sonner"
 import { GlowingEffect } from "@/components/ui/glowing-effect"
 
 const DS_VERSION = "1.2.0"
@@ -1053,30 +1054,57 @@ export default function DesignSystemPage() {
                     {(["100","300","500","700","900"] as const).map((level) => (
                       <div key={level} className="flex flex-col gap-1.5">
                         <div
-                          className="w-full h-12 rounded-md border border-border/60 flex items-end justify-end p-1"
+                          className="w-full h-12 rounded-md border border-border/60 flex items-start justify-start p-1 cursor-pointer hover:ring-2 hover:ring-ring transition-all relative group"
                           style={{ backgroundColor: `var(--rm-${c.token}-${level})` }}
+                          onClick={(e) => {
+                            const bg = getComputedStyle(e.currentTarget).backgroundColor
+                            const m = bg.match(/(\d+)/g)
+                            if (!m) return
+                            const hex = "#" + [+m[0], +m[1], +m[2]].map(v => v.toString(16).padStart(2, "0")).join("")
+                            navigator.clipboard.writeText(hex)
+                            toast.success("Скопировано в буфер обмена", { description: `HEX: ${hex}`, duration: 2000 })
+                          }}
                         >
                           <span
-                            className="text-[9px] font-[family-name:var(--font-mono-family)] px-1 rounded"
-                            style={{ backgroundColor: "var(--rm-gray-alpha-200)", color: "inherit" }}
+                            className="text-[9px] font-[family-name:var(--font-mono-family)] font-bold px-1 rounded"
+                            style={{ backgroundColor: "var(--rm-gray-alpha-200)", color: "var(--foreground)" }}
                           >{level}</span>
                         </div>
-                        <p className="text-[10px] font-[family-name:var(--font-mono-family)] text-muted-foreground truncate">--rm-{c.token}-{level}</p>
+                        <div className="flex items-center justify-between gap-0.5">
+                          <p className="text-[10px] font-[family-name:var(--font-mono-family)] text-muted-foreground truncate">--rm-{c.token}-{level}</p>
+                          <CopyButton value={`--rm-${c.token}-${level}`} label={`Токен: --rm-${c.token}-${level}`} />
+                        </div>
                       </div>
                     ))}
                   </div>
                   {/* fg tokens */}
                   <div className="grid grid-cols-2 gap-2">
                     <div
-                      className="rounded-md px-3 py-2 flex items-center justify-between"
+                      className="rounded-md border border-border/60 px-3 py-2 flex items-center justify-between cursor-pointer hover:ring-2 hover:ring-ring transition-all"
                       style={{ backgroundColor: `var(--rm-${c.token}-100)`, color: `var(--rm-${c.token}-fg)` }}
+                      onClick={(e) => {
+                        const bg = getComputedStyle(e.currentTarget).backgroundColor
+                        const m = bg.match(/(\d+)/g)
+                        if (!m) return
+                        const hex = "#" + [+m[0], +m[1], +m[2]].map(v => v.toString(16).padStart(2, "0")).join("")
+                        navigator.clipboard.writeText(hex)
+                        toast.success("Скопировано в буфер обмена", { description: `HEX: ${hex}`, duration: 2000 })
+                      }}
                     >
                       <span className="text-[length:var(--text-12)] font-[family-name:var(--font-mono-family)]">fg · текст на solid</span>
                       <span className="text-[length:var(--text-12)] font-[family-name:var(--font-mono-family)]">--rm-{c.token}-fg</span>
                     </div>
                     <div
-                      className="rounded-md px-3 py-2 flex items-center justify-between"
+                      className="rounded-md border border-border/60 px-3 py-2 flex items-center justify-between cursor-pointer hover:ring-2 hover:ring-ring transition-all"
                       style={{ backgroundColor: `var(--rm-${c.token}-900)`, color: `var(--rm-${c.token}-fg-subtle)` }}
+                      onClick={(e) => {
+                        const bg = getComputedStyle(e.currentTarget).backgroundColor
+                        const m = bg.match(/(\d+)/g)
+                        if (!m) return
+                        const hex = "#" + [+m[0], +m[1], +m[2]].map(v => v.toString(16).padStart(2, "0")).join("")
+                        navigator.clipboard.writeText(hex)
+                        toast.success("Скопировано в буфер обмена", { description: `HEX: ${hex}`, duration: 2000 })
+                      }}
                     >
                       <span className="text-[length:var(--text-12)] font-[family-name:var(--font-mono-family)]">fg-subtle · текст на 900</span>
                       <span className="text-[length:var(--text-12)] font-[family-name:var(--font-mono-family)]">--rm-{c.token}-fg-subtle</span>
