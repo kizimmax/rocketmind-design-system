@@ -62,7 +62,7 @@ function ColorHexBlock({
   return (
     <div
       ref={ref}
-      className={`relative cursor-pointer hover:border-muted-foreground dark:hover:border-white/[0.12] transition-all duration-150 ${className}`}
+      className={`relative cursor-pointer transition-all duration-150 ${className}`}
       style={style}
       onMouseEnter={() => {
         if (ref.current) {
@@ -107,7 +107,7 @@ function FgSubtleCard({ token }: { token: string }) {
   return (
     <div
       ref={ref}
-      className="rounded-md border border-border/60 px-3 py-2 flex items-center justify-between cursor-pointer hover:border-muted-foreground dark:hover:border-white/[0.12] transition-all duration-150"
+      className="rounded-md border border-border/60 px-3 py-2 flex items-center justify-between cursor-pointer"
       style={{ backgroundColor: `var(--rm-${token}-900)`, color: `var(--rm-${token}-fg-subtle)` }}
       onClick={() => {
         if (!ref.current) return

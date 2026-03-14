@@ -71,7 +71,7 @@ export function ColorSwatch({ name, token, lightHex, darkHex, className }: Color
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className="relative w-full h-20 rounded-md border border-border cursor-pointer hover:border-muted-foreground dark:hover:border-white/[0.12] transition-all duration-150"
+        className="relative w-full h-20 rounded-md border border-border cursor-pointer"
         style={{ backgroundColor: lightHex }}
       >
         {hex && (
@@ -122,7 +122,7 @@ export function ColorSwatchLive({
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className="relative w-full h-20 rounded-md border border-border cursor-pointer hover:border-muted-foreground dark:hover:border-white/[0.12] transition-all duration-150"
+        className="relative w-full h-20 rounded-md border border-border cursor-pointer"
         style={{ backgroundColor: `var(${cssVar})` }}
       >
         {hex && (
